@@ -1,0 +1,14 @@
+# SolidCraft(3D CAD)の Web 版を、ソルバニーが開くウィンドウで動かして操作する道具(計画書 §6.3)。
+# ソルバニーの config.toml の tool_repos にこのリポジトリの URL を書くと、会話で選んだときにソルバニーが取ってくる。
+# Web 版は、初めて道具を呼んだときに人に確かめてから取ってくる([setup])。インストールは要らない(ブラウザの中で動く)。
+description = "SolidCraft(3D CAD)をブラウザで動かし、作っている様子を見せながら部品を作る・直す・測る"
+page = "host.html"
+files = "solidcraft"   # ページが読み書きできる、会話の作業フォルダの中のフォルダ(設計を残す)
+timeout = 600          # 1 回の呼び出しを待つ上限(秒)
+open_timeout = 120     # ページを開いてから SolidCraft が起動してつながるまで待つ上限(秒)
+
+[setup]                # 初めて呼んだときに ready が無ければ、人に確かめてから command を動かす
+ready = "app/.ready-0.48.1"
+command = ["sh", "fetch.sh"]
+explain = "SolidCraft の Web 版 0.48.1 を、SolidCraft の公式の GitHub のリリースから取ってきて、この道具のフォルダの app/ に置きます(ダウンロード約 87MB、置くと約 226MB)。取ってきた zip は、fetch.sh に固定した SHA-256(公式の SHA256SUMS.txt と同じ値)と照らし、合わなければ置きません"
+timeout = 900          # 準備を待つ上限(秒)

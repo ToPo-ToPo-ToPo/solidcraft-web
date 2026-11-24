@@ -1,0 +1,43 @@
+[
+  {"name": "execute",
+   "description": "SolidCraft のコマンドを 1 つ実行する(エージェントカーソルが、そのコマンドのボタンと選ぶ場所まで動いてから実行する)。コマンドの名前と引数は commands で調べる。例: {\"command\": \"sketch.create\", \"params\": {\"plane\": \"XY\"}}、{\"command\": \"solid.extrude\", \"params\": {\"distance\": 20}}。実行のあと、設計を作業フォルダの solidcraft/design.json に残す",
+   "inputSchema": {"type": "object", "properties": {
+     "command": {"type": "string", "description": "コマンドの名前(例 sketch.rectangle.two_point、solid.extrude、solid.fillet、inspect.measure、model.edges)"},
+     "params": {"type": "object", "description": "コマンドの引数(長さは mm)"}},
+     "required": ["command"]}},
+  {"name": "batch",
+   "description": "コマンドを順にまとめて実行する(エージェントカーソルは 1 つずつ見せる)。途中で失敗したら、既定では最初の状態に戻し、失敗した番号とエラーを返す。結果は {completed, results, undone, failed?}",
+   "inputSchema": {"type": "object", "properties": {
+     "commands": {"type": "array", "items": {"type": "object", "properties": {
+       "command": {"type": "string"}, "params": {"type": "object"}}, "required": ["command"]},
+       "description": "[{command, params}, …]"},
+     "rollback": {"type": "boolean", "description": "失敗したら最初の状態に戻すか(既定 true)"}},
+     "required": ["commands"]}},
+  {"name": "inspect",
+   "description": "今の設計を調べる: パラメータ・履歴(timeline)・ボディ(体積 mm³・表面積・重心・外形の箱・面と辺の数)・スケッチ・選択",
+   "inputSchema": {"type": "object", "properties": {
+     "measure": {"type": "boolean", "description": "ボディを測るか(既定 true)"},
+     "timeline": {"description": "true(全部)、\"summary\"(既定。各フィーチャーの id・名前・種類とエラー)、false(出さない)"}}}},
+  {"name": "commands",
+   "description": "使えるコマンドの一覧。prefix(例 \"sketch.\"、\"solid.\")か filter(名前・ラベル・タブに含む文字)で絞る。detail=true で引数の説明も出す(長いので絞ってから)",
+   "inputSchema": {"type": "object", "properties": {
+     "prefix": {"type": "string"}, "filter": {"type": "string"},
+     "detail": {"type": "boolean", "description": "引数の説明まで出すか(既定 false: id とラベルだけ)"}}}},
+  {"name": "screenshot",
+   "description": "SolidCraft の画面の絵を撮って見る(形が思いどおりかを目で確かめる)",
+   "inputSchema": {"type": "object", "properties": {}}},
+  {"name": "undo", "description": "1 手戻す", "inputSchema": {"type": "object", "properties": {}}},
+  {"name": "redo", "description": "戻した 1 手をやり直す", "inputSchema": {"type": "object", "properties": {}}},
+  {"name": "new_design", "description": "空の設計から始め直す(今の設計は消える。作業フォルダの solidcraft/design.json も新しい設計で上書きする)",
+   "inputSchema": {"type": "object", "properties": {}}},
+  {"name": "agent_cursor",
+   "description": "エージェントカーソル(頭脳の操作を人に見せる動き)の設定を変える。人が急ぎたいと言ったら speed を上げるか \"instant\" にする",
+   "inputSchema": {"type": "object", "properties": {
+     "show": {"type": "boolean"},
+     "speed": {"description": "1〜5(何倍の速さか)か \"instant\"(動きを省く)"},
+     "follow_camera": {"type": "boolean", "description": "カメラが作業する場所を追うか"}}}},
+  {"name": "request",
+   "description": "SolidCraft の操作口のメソッドを直接呼ぶ(ほかの道具に無いことをするとき)。例: {\"method\": \"document.inspect\", \"params\": {\"timeline\": true}}、{\"method\": \"engine.describe\", \"params\": {\"command\": \"solid.fillet\"}}",
+   "inputSchema": {"type": "object", "properties": {
+     "method": {"type": "string"}, "params": {"type": "object"}}, "required": ["method"]}}
+]
