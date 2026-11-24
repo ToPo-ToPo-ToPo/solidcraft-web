@@ -6,8 +6,9 @@
 # (配布元や通信の途中で中身がすり替わっていても使わない)。値は SolidCraft の公式のリリースの SHA256SUMS.txt と同じ。
 # 版を上げるときは、VERSION と SHA256 を一緒に直し、page.toml の [setup] の ready も新しい版の名前にする。
 set -eu
-VERSION="0.48.1"
-SHA256="7a81cd0be381eb83cd750cc0ba060175cf6e5b314c8ca68acc24c71e1c5fdcf5"
+# 0.48.0 と 0.48.1 の Web 版は起動直後に止まる(上流の不具合 tangency-labs/solidcraft#21584)ので、直るまで 0.47.0 に留める
+VERSION="0.47.0"
+SHA256="6fa958ebfe73f4eb0075846e7bd202385bd126d9cfb6cedde21a0863801986f1"
 URL="https://github.com/tangency-labs/solidcraft/releases/download/v$VERSION/solidcraft-web-$VERSION.zip"
 
 here="$(cd "$(dirname "$0")" && pwd)"
@@ -22,7 +23,7 @@ else
   got="$(sha256sum "$tmp/web.zip" | cut -d ' ' -f 1)"
 fi
 if [ "$got" != "$SHA256" ]; then
-  echo "取ってきた zip の SHA-256 が合いません(期待 $SHA256、実際 $got)。置かずに止めます" >&2
+  echo "取ってきた zip の SHA-256 が合いません(期待 ${SHA256}、実際 ${got})。置かずに止めます" >&2
   exit 1
 fi
 echo "SHA-256 を確かめました: $got"

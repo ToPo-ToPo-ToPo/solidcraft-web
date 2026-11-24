@@ -26,7 +26,7 @@ async function ready() {
   if (kept) {
     const r = await sc.request("document.import", { text: kept, name: "design" });
     saved = kept;
-    if (r && r.errors && r.errors.length) console.warn("設計を戻したときのエラー", r.errors);
+    if (r && r.errors) console.warn("設計を戻したときのエラー", r.errors);    // errors はエラーの数
   }
   await sc.request("ui.agent_cursor", cursor);
 }
